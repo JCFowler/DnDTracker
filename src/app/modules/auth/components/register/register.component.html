@@ -1,0 +1,36 @@
+
+
+
+<GridLayout rows="50, *, 50, auto">
+    <Label class="title" row="0" text="Register"></Label>
+    <RadDataForm #registerDataForm row="1" [source]="registerForm" validationMode="Manual" commitMode="Manual">
+        <TKEntityProperty tkDataFormProperty name="email" displayName="Email" index="1" hintText="Email">
+            <TKPropertyEditor tkEntityPropertyEditor type="Email">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Email can't be empty."></TKNonEmptyValidator>
+            <TKEmailValidator tkEntityPropertyValidators errorMessage="Email is Invalid"></TKEmailValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="password" displayName="Password" index="2" hintText="Password">
+            <TKPropertyEditor tkEntityPropertyEditor type="Password">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+            <TKMinimumLengthValidator tkEntityPropertyValidators length="6" errorMessage="Password must be at least 6 characters."></TKMinimumLengthValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="verifyPass" displayName="Verify Password" index="3" hintText="Verify Password">
+            <TKPropertyEditor tkEntityPropertyEditor type="Password">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+            <TKMinimumLengthValidator tkEntityPropertyValidators length="6" errorMessage="Password must be at least 6 characters."></TKMinimumLengthValidator>
+        </TKEntityProperty>
+    </RadDataForm>
+    <Button row="2" text="Register" (tap)="onRegisterTap()"></Button>
+    <StackLayout row="3">
+        <Label text="Need an account?" class="smaller"></Label>
+        <Button [nsRouterLink]="['/auth/login']" text="Login"></Button>
+    </StackLayout>
+</GridLayout>

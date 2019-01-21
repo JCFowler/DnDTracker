@@ -1,0 +1,51 @@
+<ActionBar class="action-bar">
+    <!-- 
+    Use the NavigationButton as a side-drawer button in Android
+    because ActionItems are shown on the right side of the ActionBar
+    -->
+    <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
+    <!-- 
+    Use the ActionItem for IOS with position set to left. Using the
+    NavigationButton as a side-drawer button in iOS is not possible,
+    because its function is to always navigate back in the application.
+    -->
+    <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()"
+        ios.position="left">
+    </ActionItem>
+    <Label class="action-bar-title" text="Home"></Label>
+</ActionBar>
+
+<StackLayout class="page page-content">
+    <Label [text]="curUser" textWrap="true" ></Label>
+    
+    <TextField hint="UserName" [(ngModel)]="username" ></TextField>
+    <TextField hint="Password" [(ngModel)]="password" autocapitalizationType="none"></TextField>
+    <Button text="Sign IN" (tap)="signIn()" ></Button>
+    <Button text="Get from firebase." (tap)="getFromFirebase()" ></Button>
+    <Button text="Send to firebase." (tap)="addToFirebase()" ></Button>
+    <!-- <Button text="Send to firebase." (tap)="addToFirebase()" ></Button> -->
+
+    
+    <ListView [items]="myCities$ | async" height="200" *ngIf="myCities$">
+    <!-- <ListView [items]="cities" (itemTap)="onItemTap($event)" class="list-group" height="900"> -->
+        <ng-template let-city="item" let-i="index" let-odd="odd" let-even="even">
+            <!-- The item template can only have a single root view container (e.g. GridLayout, StackLayout, etc.)-->
+            <StackLayout>
+                <StackLayout orientation="horizontal" class="list-group-item">
+                    <Label text="City: " textWrap="true"></Label>
+                    <Label [text]="city.name"></Label>
+                </StackLayout>
+                <StackLayout orientation="horizontal" class="list-group-item">
+                    <Label text="State: " textWrap="true"></Label>
+                    <Label [text]="city.state"></Label>
+                </StackLayout>
+                <StackLayout orientation="horizontal" class="list-group-item">
+                    <Label text="Population: " textWrap="true"></Label>
+                    <Label [text]="city.population"></Label>
+                </StackLayout>
+             </StackLayout>
+        </ng-template>
+    </ListView>
+    
+    
+</StackLayout>

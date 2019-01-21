@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1078451444661",
+    "firebase_url": "https://dndtracker-65e7c.firebaseio.com",
+    "project_id": "dndtracker-65e7c",
+    "storage_bucket": "dndtracker-65e7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078451444661:android:a04d5c8cbf834fd0",
+        "android_client_info": {
+          "package_name": "com.krasez.dndtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078451444661-581lj2m8kubge5eich1b501bvp2vjhut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaLmFzH3d86YP8pvscsotoA_5Bo7hpkrA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

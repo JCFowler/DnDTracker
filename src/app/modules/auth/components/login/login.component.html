@@ -1,0 +1,27 @@
+
+
+<GridLayout rows="50, *, 50, auto">
+    <Label class="title" row="0" text="Login"></Label>
+    <RadDataForm #loginDataForm row="1" [source]="loginForm" validationMode="Manual" commitMode="Manual" (propertyCommitted)="onPropertyCommitted($event)">
+        <TKEntityProperty tkDataFormProperty name="email" displayName="Email" index="1" hintText="Email">
+            <TKPropertyEditor tkEntityPropertyEditor type="Email">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Email can't be empty."></TKNonEmptyValidator>
+            <TKEmailValidator tkEntityPropertyValidators errorMessage="Email is Invalid"></TKEmailValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="password" displayName="Password" index="2" hintText="Password">
+            <TKPropertyEditor tkEntityPropertyEditor type="Password">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+            <TKMinimumLengthValidator tkEntityPropertyValidators length="6" errorMessage="Password must be at least 6 characters."></TKMinimumLengthValidator>
+        </TKEntityProperty>
+    </RadDataForm>
+    <Button row="2" text="Login" (tap)="onLoginTap()"></Button>
+    <StackLayout row="3">
+        <Label text="Need an account?" class="smaller"></Label>
+        <Button [nsRouterLink]="['/auth/register']" text="Register"></Button>
+    </StackLayout>
+</GridLayout>
