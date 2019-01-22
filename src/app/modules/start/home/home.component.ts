@@ -48,18 +48,18 @@ export class HomeComponent implements OnInit {
         //   });
         // const user = firebaseWebApi.auth().currentUser;
 
-        console.log(this.currentUser);
-        firebase.getCurrentUser()
-            .then(user => {
-                //   console.log("Here")
-                this.curUser = user.email;
-                this.currentUser.name = user.name;
-                this.currentUser.email = user.email;
+        // console.log(this.currentUser);
+        // firebase.getCurrentUser()
+        //     .then(user => {
+        //         //   console.log("Here")
+        //         this.curUser = user.email;
+        //         this.currentUser.name = user.name;
+        //         this.currentUser.email = user.email;
 
-                console.log('Current User: ' + this.currentUser.name);
-                console.log(this.currentUser.email);
-            })
-            .catch(error => console.log('Trouble in paradise: ' + error));
+        //         console.log('Current User: ' + this.currentUser.name);
+        //         console.log(this.currentUser.email);
+        //     })
+        //     .catch(error => console.log('Trouble in paradise: ' + error));
 
         // console.log(user)
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RegisterFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
+import { AuthService } from '~/app/shared/services';
 
 @Component({
     moduleId: module.id,
@@ -14,7 +15,9 @@ export class RegisterComponent implements OnInit {
 
     public registerForm: RegisterFormModel;
 
-    constructor() { }
+    constructor(
+        private authService: AuthService
+    ) { }
 
     ngOnInit() {
         this.registerForm = {
@@ -31,6 +34,7 @@ export class RegisterComponent implements OnInit {
                 this.registerDataForm.dataForm.commitAll();
                 console.log(this.registerForm.email);
                 console.log(this.registerForm.password);
+                this.authService.createUserwithEmail(this.registerForm);
             }
         })
         .catch(err => {
