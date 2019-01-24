@@ -6,6 +6,7 @@ import { City } from '~/app/shared/models/city';
 import { Observable } from 'rxjs';
 import { firestore } from 'nativescript-plugin-firebase';
 import { DnDUser } from '~/app/shared/models/dnduser';
+import { AuthService } from '~/app/shared/services';
 
 // const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require('nativescript-plugin-firebase/app');
@@ -32,11 +33,13 @@ export class HomeComponent implements OnInit {
 
     curUser = '';
 
-    currentUser: DnDUser = { name: '', email: '' };
+    // currentUser: DnDUser = { name: '', email: '' };
 
     public cities: City[] = [];
 
-    constructor(private zone: NgZone) {
+    constructor(private zone: NgZone,
+      private authService: AuthService
+      ) {
         // Use the component constructor to inject providers.
     }
 
@@ -89,10 +92,14 @@ export class HomeComponent implements OnInit {
             email: email,
             password: password
           }).then((user: DnDUser) => {
-            this.currentUser = user;
+            // this.currentUser = user;
             resolve(user);
           }).catch(err => reject(err));
         });
+      }
+
+      public logout() {
+          this.authService.logout();
       }
 
     //   public doWebCreateUser(): void {

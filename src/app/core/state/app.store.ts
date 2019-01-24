@@ -1,22 +1,22 @@
-import { Observable, BehaviorSubject } from 'rxjs';
-import { State, INITIAL_STATE, StateKey } from './app.state';
+// import { Observable, BehaviorSubject } from 'rxjs';
+// import { State, INITIAL_STATE, StateKey } from './app.state';
 
-export class Store {
+// export class Store {
 
-    private subj = new BehaviorSubject<State>(INITIAL_STATE);
+//     private subj = new BehaviorSubject<State>(INITIAL_STATE);
 
-    public get value() {
-        return this.subj.value;
-    }
+//     public get value() {
+//         return this.subj.value;
+//     }
 
-    // public select<T>(name: StateKey): Observable<T> {
-    //     return this.subj.pluck<State, T>(name).distinctUntilChanged<T>();
-    // }
+//     // public select<T>(name: StateKey): Observable<T> {
+//     //     return this.subj.pluck<State, T>(name).distinctUntilChanged<T>();
+//     // }
 
-    public set<T>(name: StateKey, state: T) {
-        this.subj.next({
-            ...this.value, [name]: state
-        });
-    }
+//     public set<T>(name: StateKey, state: T) {
+//         this.subj.next({
+//             ...this.value, [name]: state
+//         });
+//     }
 
-}
+// }

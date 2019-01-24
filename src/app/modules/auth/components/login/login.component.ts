@@ -2,6 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { LoginFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
 import { AuthService } from '~/app/shared/services';
+import { Observable } from 'rxjs';
+import { DnDUser } from '~/app/shared/models';
+import { Store } from '@ngrx/store';
+import { AppState } from '~/app/core/state/app.state';
 
 @Component({
     moduleId: module.id,
@@ -15,17 +19,22 @@ export class LoginComponent implements OnInit {
 
     public loginForm: LoginFormModel;
 
+    public curUser: Observable<DnDUser> = this.store.select<DnDUser>('currentUser');
+
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private store: Store<AppState>
     ) { }
 
     ngOnInit() {
         this.loginForm = {
-            email: 'email@email.com',
-            password: 'pass'
+            email: 'hi@email.com',
+            password: 'pass12'
         };
 
         this.authService.getCurrentUser();
+
+        this.curUser.subscribe(console.log);
      }
 
      private onPropertyCommitted() {

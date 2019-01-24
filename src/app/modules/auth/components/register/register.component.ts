@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { RegisterFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
 import { AuthService } from '~/app/shared/services';
+import { Observable } from 'rxjs';
+import { DnDUser } from '~/app/shared/models';
 
 @Component({
     moduleId: module.id,
@@ -13,6 +15,7 @@ export class RegisterComponent implements OnInit {
 
     @ViewChild('registerDataForm') registerDataForm: RadDataFormComponent;
 
+    public currentUser: Observable<DnDUser>;
     public registerForm: RegisterFormModel;
 
     constructor(

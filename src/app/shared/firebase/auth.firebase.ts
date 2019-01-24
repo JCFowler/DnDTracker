@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DnDUser } from '../models';
 import { ServerErrorHandlerService } from '~/app/core/services';
 import { LoginFormModel, RegisterFormModel } from '../models/forms';
+import { User } from 'nativescript-plugin-firebase';
 
 const firebaseWebApi = require('nativescript-plugin-firebase/app');
 const firebase = require('nativescript-plugin-firebase');
@@ -15,7 +16,7 @@ export class AuthFirebase {
 
     public getCurrentUser(
         errorHandler: (error: any) => void,
-        successHandler: (ptItem: DnDUser) => void
+        successHandler: (args: User) => void
     ) {
         firebase.getCurrentUser()
             .catch(errorHandler)
@@ -25,11 +26,18 @@ export class AuthFirebase {
     public signIn(
         info: LoginFormModel,
         errorHandler: (error: any) => void,
-        successHandler: () => void
+        successHandler: (args: User) => void
     ) {
         firebaseWebApi.auth().signInWithEmailAndPassword(info.email, info.password)
             .then(successHandler)
             .catch(errorHandler);
+    }
+
+    public logout(
+        errorHandler: (error: any) => void,
+        successHandler: () => void
+    ) {
+        firebase.logout();
     }
 
     public createUserwithEmail(

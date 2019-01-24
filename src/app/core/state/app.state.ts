@@ -2,13 +2,15 @@ import { Adventure, DnDUser } from '~/app/shared/models';
 
 export type StateKey = 'adventures' | 'currentUser';
 
-export interface State {
-    adventures: Adventure[];
+export interface AppState {
+    // readonly adventures: Adventure[];
     currentUser: DnDUser;
-    [key: string]: any;
+    reducer: {
+        currentUser: DnDUser
+    };
 }
 
-export const INITIAL_STATE: State = {
-    adventures: [],
-    currentUser: undefined
-};
+// export const INITIAL_STATE: State = {
+//     adventures: [],
+//     currentUser: undefined
+// };

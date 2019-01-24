@@ -2,11 +2,12 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { NativeScriptModule } from 'nativescript-angular/nativescript.module';
 import { NativeScriptUISideDrawerModule } from 'nativescript-ui-sidedrawer/angular';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
-
+import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
+import { userReducer } from './core/state/reducers/dnduser.reducer';
 
 @NgModule({
     bootstrap: [
@@ -17,7 +18,10 @@ import { CoreModule } from './core/core.module';
         CoreModule,
         NativeScriptFormsModule,
         NativeScriptModule,
-        NativeScriptUISideDrawerModule
+        NativeScriptUISideDrawerModule,
+        StoreModule.forRoot({
+            currentUser: userReducer
+        })
     ],
     declarations: [
         AppComponent

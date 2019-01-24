@@ -1,7 +1,7 @@
 
 
 <GridLayout rows="50, *, 50, auto">
-    <Label class="title" row="0" text="Login"></Label>
+    <Label class="title" row="0" [text]="(curUser | async).email"></Label>
     <RadDataForm #loginDataForm row="1" [source]="loginForm" validationMode="Manual" commitMode="Manual" (propertyCommitted)="onPropertyCommitted($event)">
         <TKEntityProperty tkDataFormProperty name="email" displayName="Email" index="1" hintText="Email">
             <TKPropertyEditor tkEntityPropertyEditor type="Email">

@@ -1,5 +1,5 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { Store } from './state/app.store';
+
 import { SERVICES } from './services';
 
 @NgModule({
@@ -7,7 +7,6 @@ import { SERVICES } from './services';
     exports: [],
     declarations: [],
     providers: [
-        Store,
         ...SERVICES
     ],
 })
