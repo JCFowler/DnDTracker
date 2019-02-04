@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { firestore } from 'nativescript-plugin-firebase';
 import { DnDUser } from '~/app/shared/models/dnduser';
 import { AuthService } from '~/app/shared/services';
+import { RouterExtensions } from 'nativescript-angular/router';
 
 // const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require('nativescript-plugin-firebase/app');
@@ -38,7 +39,8 @@ export class HomeComponent implements OnInit {
     public cities: City[] = [];
 
     constructor(private zone: NgZone,
-      private authService: AuthService
+      private authService: AuthService,
+      private routerExtenions: RouterExtensions,
       ) {
         // Use the component constructor to inject providers.
     }
@@ -65,7 +67,6 @@ export class HomeComponent implements OnInit {
         //     .catch(error => console.log('Trouble in paradise: ' + error));
 
         // console.log(user)
-
           this.myCities$ = Observable.create(subscriber => {
             const colRef: firestore.CollectionReference = firebaseWebApi.firestore().collection('test');
             colRef.orderBy('name', 'desc').onSnapshot((snapshot: firestore.QuerySnapshot) => {
@@ -99,7 +100,10 @@ export class HomeComponent implements OnInit {
       }
 
       public logout() {
-          this.authService.logout();
+          this.authService.logout(() => {
+            console.log('LOGGOUT TAPPPPPPEEDD');
+            this.routerExtenions.navigate(['/auth/login'], { clearHistory: true });
+          });
       }
 
     //   public doWebCreateUser(): void {

@@ -28,10 +28,14 @@ export class AppComponent implements OnInit {
 
         this.router.events
         .pipe(filter((event: any) => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => this._activatedUrl = event.urlAfterRedirects);
+        .subscribe((event: NavigationEnd) => {
+            console.log('Navigating to: ' + event.urlAfterRedirects);
+            this._activatedUrl = event.urlAfterRedirects;
+        });
     }
 
     firebaseInit() {
+        console.log('Started firebase Init');
         firebase.init({
             onAuthStateChanged: function(data) { // optional but useful to immediately re-logon the user when he re-visits your app
               console.log(data.loggedIn ? 'Logged in to firebase' : 'Logged out from firebase');

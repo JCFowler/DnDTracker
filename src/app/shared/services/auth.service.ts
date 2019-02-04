@@ -4,36 +4,60 @@ import { ServerErrorHandlerService } from '~/app/core/services';
 import { DnDUser } from '../models';
 import { LoginFormModel, RegisterFormModel } from '../models/forms';
 import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
 import { AppState } from '~/app/core/state/app.state';
-import * as UserActions from '~/app/core/state/actions/dnduser.action';
 import { User } from 'nativescript-plugin-firebase';
+import { Store } from '@ngxs/store';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
+import { DnDUserState } from '~/app/core/state/dnduser.state';
+
+let LS = require( 'nativescript-localstorage' );
 
 @Injectable()
 export class AuthService {
 
     currentUser: Observable<DnDUser>;
 
+    @Emitter(DnDUserState.addUser)
+    public addUser: Emittable<DnDUser>;
+
+    @Emitter(DnDUserState.addUser)
+    public removeUser: Emittable<void>;
+
     constructor(
         private repo: AuthFirebase,
-        private store: Store<AppState>,
+        // private store: Store<AppState>,
+        private store: Store,
         private errorHandler: ServerErrorHandlerService
     ) { }
-
 
     public getCurrentUser() {
         this.repo.getCurrentUser(this.errorHandler.handleHttpError,
             (user: User) => {
-                this.store.dispatch(new UserActions.AddUser({uid: user.uid, name: user.name, email: user.email }));
+                console.log('GET CURRENT');
+                console.log(user.email);
+                console.log(user.uid);
+                console.log(user.name);
+
+                // LS.setItem('email', user.email);
+                // console.log('^^^');
+                // console.log(user.email);
+                // let u: DnDUser = {uid: user.uid, name: user.name, email: user.email };
+                // this.addUser.emit(u);
+                // console.log('User signed in successfully! ' + user.email);
             });
     }
 
-    public signIn(info: LoginFormModel) {
+    public signIn(info: LoginFormModel,
+        successHandler: () => void) {
         this.repo.signIn(info, this.errorHandler.handleHttpError,
             (user: any) => {
-                this.getCurrentUser();
-                console.log('User signed in successfully! ' + user.email);
+                let u: DnDUser = {uid: user.user.uid, name: user.user.name, email: user.user.email };
+                this.addUser.emit(u);
+                LS.setItem('email', user.user.email);
+                console.log('User signed in successfully! ' + user.user.email);
+                successHandler();
             });
+
     }
 
     public createUserwithEmail(info: RegisterFormModel) {
@@ -43,34 +67,14 @@ export class AuthService {
             });
     }
 
-    public logout() {
+    public logout(successHandler: () => void) {
         this.repo.logout(this.errorHandler.handleHttpError,
             () => {
-                this.store.dispatch(new UserActions.RemoveUser);
+                LS.setItem('email', '');
                 console.log('User was loggout out successfully!');
+                console.log(LS.getItem('email'));
+                this.removeUser.emit();
+                successHandler();
             });
     }
-
-
-    // public getPtItem(id: number) {
-    //     this.repo.getPtItem(id,
-    //         this.errorHandler.handleHttpError,
-    //         (ptItem: PtItem) => {
-
-    //             this.setUserAvatarUrl(ptItem.assignee);
-    //             ptItem.comments.forEach(c => this.setUserAvatarUrl(c.user));
-
-    //             this.zone.run(() => {
-    //                 this.store.set('currentSelectedItem', ptItem);
-
-    //                 // optimistically update the item list with the new item
-    //                 const updatedItems = this.store.value.backlogItems.map((item) => {
-    //                     return item.id === id ? ptItem : item;
-    //                 });
-
-    //                 this.store.set('backlogItems', updatedItems);
-    //             });
-    //         }
-    //     );
-    // }
 }

@@ -4,8 +4,11 @@ import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-
 import { AuthService } from '~/app/shared/services';
 import { Observable } from 'rxjs';
 import { DnDUser } from '~/app/shared/models';
-import { Store } from '@ngrx/store';
+import { Store, Select } from '@ngxs/store';
 import { AppState } from '~/app/core/state/app.state';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
+import { DnDUserState } from '~/app/core/state/dnduser.state';
+import { RouterExtensions } from 'nativescript-angular/router';
 
 @Component({
     moduleId: module.id,
@@ -19,22 +22,32 @@ export class LoginComponent implements OnInit {
 
     public loginForm: LoginFormModel;
 
-    public curUser: Observable<DnDUser> = this.store.select<DnDUser>('currentUser');
+    @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
+
+    // @Select(DnDUserState)
+    // curUser$: Observable<DnDUser>;
 
     constructor(
         private authService: AuthService,
-        private store: Store<AppState>
-    ) { }
+        private store: Store,
+        private routerExtenions: RouterExtensions,
+    ) {
+    }
 
     ngOnInit() {
+        console.log('local:');
         this.loginForm = {
             email: 'hi@email.com',
             password: 'pass12'
         };
 
-        this.authService.getCurrentUser();
+        this.curUser$.subscribe((user) => {
+            console.log('subscriped');
+            console.dir(user);
+            console.log('###');
+        });
 
-        this.curUser.subscribe(console.log);
+        // this.curUser.subscribe(console.log);
      }
 
      private onPropertyCommitted() {
@@ -60,7 +73,10 @@ export class LoginComponent implements OnInit {
                 this.loginDataForm.dataForm.commitAll();
                 console.log(this.loginForm.email);
                 console.log(this.loginForm.password);
-                this.authService.signIn(this.loginForm);
+                this.authService.signIn(this.loginForm, () => {
+                    console.log('logged in!!!!!!!');
+                    this.routerExtenions.navigate(['/home'], { clearHistory: true });
+                });
             }
         })
         .catch(err => {

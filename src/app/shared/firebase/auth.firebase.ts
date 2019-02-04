@@ -37,7 +37,9 @@ export class AuthFirebase {
         errorHandler: (error: any) => void,
         successHandler: () => void
     ) {
-        firebase.logout();
+        firebase.logout()
+            .then(successHandler)
+            .catch(errorHandler);
     }
 
     public createUserwithEmail(
