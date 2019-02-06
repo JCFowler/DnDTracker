@@ -11,6 +11,7 @@ import { DnDUserState } from './core/state/dnduser.state';
 import { NgxsEmitPluginModule } from '@ngxs-labs/emitter';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { SharedModule } from './shared/shared.module';
 
 let LS = require( 'nativescript-localstorage' );
 
@@ -21,6 +22,7 @@ let LS = require( 'nativescript-localstorage' );
     imports: [
         AppRoutingModule,
         CoreModule,
+        SharedModule,
         NativeScriptFormsModule,
         NativeScriptModule,
         NativeScriptUISideDrawerModule,

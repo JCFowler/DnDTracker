@@ -6,7 +6,6 @@ import { DnDUser } from '~/app/shared/models';
 import { AppState } from '../state/app.state';
 import { Select, Store } from '@ngxs/store';
 import { DnDUserState, DnDUserStateModel } from '../state/dnduser.state';
-import { AuthService } from '~/app/shared/services';
 
 let LS = require( 'nativescript-localstorage' );
 

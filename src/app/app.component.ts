@@ -6,6 +6,9 @@ import { filter } from 'rxjs/operators';
 import * as app from 'tns-core-modules/application';
 
 import firebase = require('nativescript-plugin-firebase');
+import { Select } from '@ngxs/store';
+import { DnDUserState } from './core/state/dnduser.state';
+import { Observable } from 'rxjs';
 
 @Component({
     moduleId: module.id,
@@ -15,6 +18,8 @@ import firebase = require('nativescript-plugin-firebase');
 export class AppComponent implements OnInit {
     private _activatedUrl: string;
     private _sideDrawerTransition: DrawerTransitionBase;
+
+    @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
 
     constructor(private router: Router, private routerExtensions: RouterExtensions) {
         // Use the component constructor to inject services.
@@ -31,6 +36,13 @@ export class AppComponent implements OnInit {
         .subscribe((event: NavigationEnd) => {
             console.log('Navigating to: ' + event.urlAfterRedirects);
             this._activatedUrl = event.urlAfterRedirects;
+        });
+
+        this.isAuth$.subscribe((authStatus: boolean) => {
+            console.log('OVVVVER HERE');
+            if (!authStatus) {
+                this.routerExtensions.navigate(['/auth/login'], { clearHistory: true });
+            }
         });
     }
 

@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { RegisterFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
-import { AuthService } from '~/app/shared/services';
 import { Observable } from 'rxjs';
 import { DnDUser } from '~/app/shared/models';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
+import { DnDUserState } from '~/app/core/state/dnduser.state';
 
 @Component({
     moduleId: module.id,
@@ -13,14 +14,15 @@ import { DnDUser } from '~/app/shared/models';
 
 export class RegisterComponent implements OnInit {
 
+    @Emitter(DnDUserState.createUserwithEmail)
+    public createUser: Emittable<RegisterFormModel>;
+
     @ViewChild('registerDataForm') registerDataForm: RadDataFormComponent;
 
     public currentUser: Observable<DnDUser>;
     public registerForm: RegisterFormModel;
 
-    constructor(
-        private authService: AuthService
-    ) { }
+    constructor() { }
 
     ngOnInit() {
         this.registerForm = {
@@ -37,7 +39,8 @@ export class RegisterComponent implements OnInit {
                 this.registerDataForm.dataForm.commitAll();
                 console.log(this.registerForm.email);
                 console.log(this.registerForm.password);
-                this.authService.createUserwithEmail(this.registerForm);
+                this.createUser.emit(this.registerForm);
+                // this.authService.createUserwithEmail(this.registerForm);
             }
         })
         .catch(err => {

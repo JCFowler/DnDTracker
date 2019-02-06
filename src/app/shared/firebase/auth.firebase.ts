@@ -14,45 +14,36 @@ export class AuthFirebase {
 
     constructor() { }
 
-    public getCurrentUser(
-        errorHandler: (error: any) => void,
-        successHandler: (args: User) => void
+    public async getCurrentUser(
+        // successHandler: (args: User) => void,
+        // errorHandler: (error: any) => void
     ) {
-        firebase.getCurrentUser()
-            .catch(errorHandler)
-            .then(successHandler);
+        return await firebase.getCurrentUser();
+        // firebase.getCurrentUser()
+        //     .catch(errorHandler)
+        //     .then(successHandler);
     }
 
-    public signIn(
-        info: LoginFormModel,
-        errorHandler: (error: any) => void,
-        successHandler: (args: User) => void
-    ) {
-        firebaseWebApi.auth().signInWithEmailAndPassword(info.email, info.password)
-            .then(successHandler)
-            .catch(errorHandler);
+    public async signIn(info: LoginFormModel) {
+        return await firebaseWebApi.auth().signInWithEmailAndPassword(info.email, info.password);
     }
 
-    public logout(
-        errorHandler: (error: any) => void,
-        successHandler: () => void
-    ) {
-        firebase.logout()
-            .then(successHandler)
-            .catch(errorHandler);
+    public async logout() {
+        return await firebase.logout();
     }
 
-    public createUserwithEmail(
+    public async createUserwithEmail(
         info: RegisterFormModel,
-        errorHandler: (error: any) => void,
-        successHandler: () => void
+        // successHandler: () => void,
+        // errorHandler: (error: any) => void
     ) {
-        firebase.createUser({
-            email: info.email,
-            password: info.password
-        })
-            .then(successHandler)
-            .catch(errorHandler);
+        return await firebase.createUser({ email: info.email, password: info.password });
+        // firebase.createUser({
+        //     email: info.email,
+        //     password: info.password
+        // })
+        //     .then(successHandler)
+        //     .catch(errorHandler);
     }
 }
 

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LoginFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
-import { AuthService } from '~/app/shared/services';
 import { Observable } from 'rxjs';
 import { DnDUser } from '~/app/shared/models';
 import { Store, Select } from '@ngxs/store';
@@ -22,19 +21,29 @@ export class LoginComponent implements OnInit {
 
     public loginForm: LoginFormModel;
 
+    @Emitter(DnDUserState.signIn)
+    public signIn: Emittable<LoginFormModel>;
+
     @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
+
+    @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
 
     // @Select(DnDUserState)
     // curUser$: Observable<DnDUser>;
 
     constructor(
-        private authService: AuthService,
         private store: Store,
         private routerExtenions: RouterExtensions,
     ) {
     }
 
     ngOnInit() {
+        this.isAuth$.subscribe((authStatus: boolean) => {
+            if (authStatus) {
+                this.routerExtenions.navigate(['/home'], { clearHistory: true });
+            }
+        });
+
         console.log('local:');
         this.loginForm = {
             email: 'hi@email.com',
@@ -68,16 +77,10 @@ export class LoginComponent implements OnInit {
 
      private onLoginTap() {
         this.loginDataForm.dataForm.validateAll()
-        .then(ok => {
-            if (ok) {
-                this.loginDataForm.dataForm.commitAll();
-                console.log(this.loginForm.email);
-                console.log(this.loginForm.password);
-                this.authService.signIn(this.loginForm, () => {
-                    console.log('logged in!!!!!!!');
-                    this.routerExtenions.navigate(['/home'], { clearHistory: true });
-                });
-            }
+            .then(ok => {
+                if (ok) {
+                    this.signIn.emit(this.loginForm);
+                }
         })
         .catch(err => {
             console.log(err);
