@@ -8,10 +8,9 @@ import { firestore } from 'nativescript-plugin-firebase';
 import { DnDUser } from '~/app/shared/models/dnduser';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { Emitter, Emittable } from '@ngxs-labs/emitter';
-import { DnDUserState } from '~/app/core/state/dnduser.state';
+import { DnDUserState } from '~/app/state/dnduser.state';
 import { LoginFormModel } from '~/app/shared/models/forms';
 
-// const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require('nativescript-plugin-firebase/app');
 const firebase = require('nativescript-plugin-firebase');
 
@@ -105,12 +104,7 @@ export class HomeComponent implements OnInit {
       }
 
       public logout() {
-          console.log('LOGGOUT TAPPPPPPEEDD');
         this.logoutEmitter.emit();
-          // this.authService.logout(() => {
-          //   console.log('LOGGOUT TAPPPPPPEEDD');
-          //   this.routerExtenions.navigate(['/auth/login'], { clearHistory: true });
-          // });
       }
 
     //   public doWebCreateUser(): void {

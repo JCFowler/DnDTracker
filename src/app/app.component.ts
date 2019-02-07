@@ -7,8 +7,9 @@ import * as app from 'tns-core-modules/application';
 
 import firebase = require('nativescript-plugin-firebase');
 import { Select } from '@ngxs/store';
-import { DnDUserState } from './core/state/dnduser.state';
+import { DnDUserState } from './state/dnduser.state';
 import { Observable } from 'rxjs';
+import { DnDUser } from './shared/models';
 
 @Component({
     moduleId: module.id,
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
     private _sideDrawerTransition: DrawerTransitionBase;
 
     @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
+    @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
 
     constructor(private router: Router, private routerExtensions: RouterExtensions) {
         // Use the component constructor to inject services.
@@ -39,7 +41,6 @@ export class AppComponent implements OnInit {
         });
 
         this.isAuth$.subscribe((authStatus: boolean) => {
-            console.log('OVVVVER HERE');
             if (!authStatus) {
                 this.routerExtensions.navigate(['/auth/login'], { clearHistory: true });
             }

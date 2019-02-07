@@ -3,17 +3,16 @@ import { NativeScriptModule } from 'nativescript-angular/nativescript.module';
 import { NativeScriptUISideDrawerModule } from 'nativescript-ui-sidedrawer/angular';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module';
 import { NgxsModule } from '@ngxs/store';
-import { DnDUserState } from './core/state/dnduser.state';
 import { NgxsEmitPluginModule } from '@ngxs-labs/emitter';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
-import { SharedModule } from './shared/shared.module';
 
-let LS = require( 'nativescript-localstorage' );
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
+import { STATES } from './state';
+
 
 @NgModule({
     bootstrap: [
@@ -22,11 +21,10 @@ let LS = require( 'nativescript-localstorage' );
     imports: [
         AppRoutingModule,
         CoreModule,
-        SharedModule,
         NativeScriptFormsModule,
         NativeScriptModule,
         NativeScriptUISideDrawerModule,
-        NgxsModule.forRoot([ DnDUserState ]),
+        NgxsModule.forRoot([ ...STATES ]),
         NgxsStoragePluginModule.forRoot(),
         NgxsEmitPluginModule.forRoot(),
         NgxsLoggerPluginModule.forRoot()

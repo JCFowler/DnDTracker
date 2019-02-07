@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LoginFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
-import { Observable } from 'rxjs';
-import { DnDUser } from '~/app/shared/models';
-import { Store, Select } from '@ngxs/store';
-import { AppState } from '~/app/core/state/app.state';
-import { Emitter, Emittable } from '@ngxs-labs/emitter';
-import { DnDUserState } from '~/app/core/state/dnduser.state';
 import { RouterExtensions } from 'nativescript-angular/router';
+
+import { Observable } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
+
+import { LoginFormModel } from '~/app/shared/models/forms';
+import { DnDUser } from '~/app/shared/models';
+import { DnDUserState } from '~/app/state/dnduser.state';
 
 @Component({
     moduleId: module.id,
@@ -19,23 +20,17 @@ export class LoginComponent implements OnInit {
 
     @ViewChild('loginDataForm') loginDataForm: RadDataFormComponent;
 
-    public loginForm: LoginFormModel;
+    @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
+    @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
 
     @Emitter(DnDUserState.signIn)
     public signIn: Emittable<LoginFormModel>;
 
-    @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
-
-    @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
-
-    // @Select(DnDUserState)
-    // curUser$: Observable<DnDUser>;
+    public loginForm: LoginFormModel;
 
     constructor(
-        private store: Store,
         private routerExtenions: RouterExtensions,
-    ) {
-    }
+    ) { }
 
     ngOnInit() {
         this.isAuth$.subscribe((authStatus: boolean) => {
@@ -44,19 +39,10 @@ export class LoginComponent implements OnInit {
             }
         });
 
-        console.log('local:');
         this.loginForm = {
             email: 'hi@email.com',
             password: 'pass12'
         };
-
-        this.curUser$.subscribe((user) => {
-            console.log('subscriped');
-            console.dir(user);
-            console.log('###');
-        });
-
-        // this.curUser.subscribe(console.log);
      }
 
      private onPropertyCommitted() {

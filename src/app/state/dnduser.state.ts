@@ -3,7 +3,7 @@ import { State, Selector, StateContext } from '@ngxs/store';
 import { Receiver, EmitterAction } from '@ngxs-labs/emitter';
 import { LoginFormModel, RegisterFormModel } from '~/app/shared/models/forms';
 import { Injector } from '@angular/core';
-import { AuthFirebase } from '~/app/shared/firebase';
+import { AuthService } from '../core/firebase';
 
 let LS = require( 'nativescript-localstorage' );
 
@@ -23,10 +23,10 @@ export interface DnDUserStateModel {
 })
 
 export class DnDUserState {
-    private static authService: AuthFirebase;
+    private static authService: AuthService;
 
     constructor(injector: Injector) {
-        DnDUserState.authService = injector.get<AuthFirebase>(AuthFirebase);
+        DnDUserState.authService = injector.get<AuthService>(AuthService);
     }
 
     @Selector()
@@ -60,7 +60,7 @@ export class DnDUserState {
     public static async signIn(ctx: StateContext<DnDUserStateModel>, action: EmitterAction<LoginFormModel>) {
         await this.authService.signIn(action.payload)
             .then((response: any) => {
-                let u: DnDUser = response.user;
+                let u: DnDUser = {uid: response.user.uid, name: response.user.name, email: response.user.email };
                 LS.setItem('email', u.email);
                 console.log('User signed in successfully! ' + u.email);
                 ctx.patchState({
