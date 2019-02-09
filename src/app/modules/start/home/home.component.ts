@@ -6,9 +6,11 @@ import { City } from '~/app/shared/models/city';
 import { Observable } from 'rxjs';
 import { firestore } from 'nativescript-plugin-firebase';
 import { DnDUser } from '~/app/shared/models/dnduser';
-import { AuthService } from '~/app/shared/services';
+import { RouterExtensions } from 'nativescript-angular/router';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
+import { DnDUserState } from '~/app/state/dnduser.state';
+import { LoginFormModel } from '~/app/shared/models/forms';
 
-// const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require('nativescript-plugin-firebase/app');
 const firebase = require('nativescript-plugin-firebase');
 
@@ -26,7 +28,11 @@ const testCollection = firebaseWebApi.firestore().collection('test');
 })
 export class HomeComponent implements OnInit {
 
+  @Emitter(DnDUserState.logout)
+  public logoutEmitter: Emittable<LoginFormModel>;
+
     public myCities$: Observable<Array<City>>;
+
 
     username = '';
     password = '';
@@ -38,7 +44,7 @@ export class HomeComponent implements OnInit {
     public cities: City[] = [];
 
     constructor(private zone: NgZone,
-      private authService: AuthService
+      private routerExtenions: RouterExtensions,
       ) {
         // Use the component constructor to inject providers.
     }
@@ -65,7 +71,6 @@ export class HomeComponent implements OnInit {
         //     .catch(error => console.log('Trouble in paradise: ' + error));
 
         // console.log(user)
-
           this.myCities$ = Observable.create(subscriber => {
             const colRef: firestore.CollectionReference = firebaseWebApi.firestore().collection('test');
             colRef.orderBy('name', 'desc').onSnapshot((snapshot: firestore.QuerySnapshot) => {
@@ -99,7 +104,7 @@ export class HomeComponent implements OnInit {
       }
 
       public logout() {
-          this.authService.logout();
+        this.logoutEmitter.emit();
       }
 
     //   public doWebCreateUser(): void {

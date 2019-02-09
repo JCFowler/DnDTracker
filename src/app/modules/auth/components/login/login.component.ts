@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LoginFormModel } from '~/app/shared/models/forms';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
-import { AuthService } from '~/app/shared/services';
+import { RouterExtensions } from 'nativescript-angular/router';
+
 import { Observable } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
+
+import { LoginFormModel } from '~/app/shared/models/forms';
 import { DnDUser } from '~/app/shared/models';
-import { Store } from '@ngrx/store';
-import { AppState } from '~/app/core/state/app.state';
+import { DnDUserState } from '~/app/state/dnduser.state';
 
 @Component({
     moduleId: module.id,
@@ -17,24 +20,29 @@ export class LoginComponent implements OnInit {
 
     @ViewChild('loginDataForm') loginDataForm: RadDataFormComponent;
 
+    @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
+    @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
+
+    @Emitter(DnDUserState.signIn)
+    public signIn: Emittable<LoginFormModel>;
+
     public loginForm: LoginFormModel;
 
-    public curUser: Observable<DnDUser> = this.store.select<DnDUser>('currentUser');
-
     constructor(
-        private authService: AuthService,
-        private store: Store<AppState>
+        private routerExtenions: RouterExtensions,
     ) { }
 
     ngOnInit() {
+        this.isAuth$.subscribe((authStatus: boolean) => {
+            if (authStatus) {
+                this.routerExtenions.navigate(['/home'], { clearHistory: true });
+            }
+        });
+
         this.loginForm = {
             email: 'hi@email.com',
             password: 'pass12'
         };
-
-        this.authService.getCurrentUser();
-
-        this.curUser.subscribe(console.log);
      }
 
      private onPropertyCommitted() {
@@ -55,13 +63,10 @@ export class LoginComponent implements OnInit {
 
      private onLoginTap() {
         this.loginDataForm.dataForm.validateAll()
-        .then(ok => {
-            if (ok) {
-                this.loginDataForm.dataForm.commitAll();
-                console.log(this.loginForm.email);
-                console.log(this.loginForm.password);
-                this.authService.signIn(this.loginForm);
-            }
+            .then(ok => {
+                if (ok) {
+                    this.signIn.emit(this.loginForm);
+                }
         })
         .catch(err => {
             console.log(err);

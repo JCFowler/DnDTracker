@@ -2,7 +2,6 @@ import { AuthService } from './auth.service';
 
 export * from './auth.service';
 
-
-export const SERVICES = [
+export const API_SERVICES = [
     AuthService
 ];

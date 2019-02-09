@@ -1,13 +1,15 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 
-import { SERVICES } from './services';
+import { CORE_SERVICES } from './services';
+import { API_SERVICES } from './firebase';
 
 @NgModule({
     imports: [],
     exports: [],
     declarations: [],
     providers: [
-        ...SERVICES
+        ...API_SERVICES,
+        ...CORE_SERVICES
     ],
 })
 export class CoreModule {
