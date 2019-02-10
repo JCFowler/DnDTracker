@@ -1,10 +1,10 @@
 
 
 <GridLayout rows="50, *, 50, auto">
-    <StackLayout row="0" *ngIf="curUser$ | async; let user">
-        <Label class="title" [text]="user.email"></Label>
+    <StackLayout row="0" *ngIf="authError$ | async; let error">
+        <Label class="title" [text]="error"></Label>
     </StackLayout>
-    <RadDataForm #loginDataForm row="1" [source]="loginForm" validationMode="Manual" commitMode="Manual" (propertyCommitted)="onPropertyCommitted($event)">
+    <RadDataForm #loginDataForm row="1" [source]="loginForm" validationMode="Manual" commitMode="Manual">
         <TKEntityProperty tkDataFormProperty name="email" displayName="Email" index="1" hintText="Email">
             <TKPropertyEditor tkEntityPropertyEditor type="Email">
                 <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>

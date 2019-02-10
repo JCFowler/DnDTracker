@@ -1,9 +1,12 @@
 
 
 
-<GridLayout rows="50, *, 50, auto">
+<GridLayout rows="30, 30, *, 50, auto">
     <Label class="title" row="0" text="Register"></Label>
-    <RadDataForm #registerDataForm row="1" [source]="registerForm" validationMode="Manual" commitMode="Manual">
+    <StackLayout row="1" *ngIf="registerError$ | async; let error">
+        <Label color="red" [text]="error"></Label>
+    </StackLayout>
+    <RadDataForm #registerDataForm row="2" [source]="registerForm" validationMode="Manual" commitMode="Manual">
         <TKEntityProperty tkDataFormProperty name="name" displayName="Nickname" index="1" hintText="Nickname">
             <TKPropertyEditor tkEntityPropertyEditor type="Text">
                 <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
@@ -35,8 +38,8 @@
             <TKMinimumLengthValidator tkEntityPropertyValidators length="6" errorMessage="Password must be at least 6 characters."></TKMinimumLengthValidator>
         </TKEntityProperty>
     </RadDataForm>
-    <Button row="2" text="Register" (tap)="onRegisterTap()"></Button>
-    <StackLayout row="3">
+    <Button row="3" text="Register" (tap)="onRegisterTap()"></Button>
+    <StackLayout row="4">
         <Label text="Need an account?" class="smaller"></Label>
         <Button [nsRouterLink]="['/auth/login']" text="Login"></Button>
     </StackLayout>

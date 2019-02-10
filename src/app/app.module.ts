@@ -28,7 +28,7 @@ import { STATES } from './state';
         NgxsModule.forRoot([ ...STATES ]),
         NgxsStoragePluginModule.forRoot(),
         NgxsEmitPluginModule.forRoot(),
-        NgxsLoggerPluginModule.forRoot()
+        NgxsLoggerPluginModule.forRoot(),
     ],
     declarations: [
         AppComponent

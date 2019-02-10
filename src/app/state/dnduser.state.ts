@@ -1,16 +1,18 @@
 import { DnDUser } from '~/app/shared/models';
-import { State, Selector, StateContext } from '@ngxs/store';
-import { Receiver, EmitterAction } from '@ngxs-labs/emitter';
+import { State, Selector, StateContext, Store, NgxsOnInit } from '@ngxs/store';
+import { Receiver, EmitterAction, Emitter, Emittable } from '@ngxs-labs/emitter';
 import { LoginFormModel, RegisterFormModel } from '~/app/shared/models/forms';
 import { Injector } from '@angular/core';
 import { AuthService } from '../core/firebase';
+import { CharacterState } from './character.state';
 
 let LS = require( 'nativescript-localstorage' );
 
 export interface DnDUserStateModel {
     user: DnDUser | null;
     auth: Boolean;
-    authError: String;
+    authError: string;
+    registerError: string;
 }
 
 @State<DnDUserStateModel>({
@@ -18,15 +20,28 @@ export interface DnDUserStateModel {
     defaults: {
         user: null,
         auth: false,
-        authError: undefined
+        authError: undefined,
+        registerError: undefined
     },
 })
 
-export class DnDUserState {
+export class DnDUserState implements NgxsOnInit {
     private static authService: AuthService;
+    private static store: Store;
 
     constructor(injector: Injector) {
         DnDUserState.authService = injector.get<AuthService>(AuthService);
+        DnDUserState.store = injector.get<Store>(Store);
+    }
+
+    @Emitter(CharacterState.removeCharacters)
+    public static removeCharacters: Emittable<void>;
+
+    ngxsOnInit(ctx: StateContext<DnDUserStateModel>) {
+        ctx.patchState({
+            authError: undefined,
+            registerError: undefined
+        });
     }
 
     @Selector()
@@ -37,6 +52,16 @@ export class DnDUserState {
     @Selector()
     public static isAuth(state: DnDUserStateModel) {
         return state.auth;
+    }
+
+    @Selector()
+    public static authError(state: DnDUserStateModel) {
+        return state.authError;
+    }
+
+    @Selector()
+    public static registerError(state: DnDUserStateModel) {
+        return state.registerError;
     }
 
     @Receiver()
@@ -66,6 +91,9 @@ export class DnDUserState {
                         console.log(`State updateUsername ERROR: ${error}`);
                     });
             }).catch((error) => {
+                ctx.patchState({
+                    registerError: 'Email address is already in use.'
+                });
                 console.log(`State CreateUserWithEmail ERROR: ${error}`);
             });
     }
@@ -83,11 +111,12 @@ export class DnDUserState {
                     authError: undefined
                 });
             }).catch((error) => {
+                console.log('OMG ERROR');
                 console.log(error);
                 ctx.patchState({
                     user: null,
                     auth: false,
-                    authError: error
+                    authError: 'Username or Password is incorrect.'
                 });
             });
     }
@@ -101,12 +130,18 @@ export class DnDUserState {
             }).catch((error) => {
                 console.log(`State Logout ERROR: ${error}`);
             });
-        ctx.patchState({
+
+        // Removes all characters.
+        this.removeCharacters.emit();
+
+        ctx.setState({
             user: null,
             auth: false,
-            authError: undefined
+            authError: undefined,
+            registerError: undefined
         });
     }
+
 
     @Receiver()
     public static removeUser(ctx: StateContext<DnDUserStateModel>) {

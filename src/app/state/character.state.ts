@@ -1,8 +1,9 @@
 import { Character } from '../shared/models/character';
-import { State, Selector, StateContext } from '@ngxs/store';
+import { State, Selector, StateContext, Store } from '@ngxs/store';
 import { CharacterService } from '../core/firebase/character.service';
 import { Injector } from '@angular/core';
 import { Receiver, EmitterAction } from '@ngxs-labs/emitter';
+import { DnDUserState } from './dnduser.state';
 
 export interface CharacterStateModel {
     characters: Character[];
@@ -17,9 +18,11 @@ export interface CharacterStateModel {
 
 export class CharacterState {
     private static charService: CharacterService;
+    private static store: Store;
 
     constructor(injector: Injector) {
         CharacterState.charService = injector.get<CharacterService>(CharacterService);
+        CharacterState.store = injector.get<Store>(Store);
     }
 
     @Selector()
@@ -29,7 +32,9 @@ export class CharacterState {
 
     @Receiver()
     public static async addCharacter(ctx: StateContext<CharacterStateModel>, action: EmitterAction<Character>) {
-        this.charService.addNewCharacter(action.payload)
+        const user = this.store.selectSnapshot(DnDUserState.getUser);
+
+        this.charService.addNewCharacter(action.payload, user.uid)
             .then(() => {
                 console.log(`Character was created successfully! Name: ${action.payload.name}`);
             })
@@ -40,7 +45,9 @@ export class CharacterState {
 
     @Receiver()
     public static async getAllCharacters(ctx: StateContext<CharacterStateModel>) {
-        this.charService.getAllCharacters()
+        const user = this.store.selectSnapshot(DnDUserState.getUser);
+
+        this.charService.getAllCharacters(user.uid)
             .then((response) => {
                 let chars: Character[] = [];
 
@@ -58,24 +65,11 @@ export class CharacterState {
             });
     }
 
-    // @Selector()
-    // public static isAuth(state: DnDUserStateModel) {
-    //     return state.auth;
-    // }
-    // @Receiver()
-    // public static addUser(ctx: StateContext<DnDUserStateModel>, action: EmitterAction<DnDUser>) {
-    //     ctx.patchState({
-    //         user: action.payload
-    //     });
-    // }
-    // @Receiver()
-    // public static async createUserwithEmail(ctx: StateContext<DnDUserStateModel>, action: EmitterAction<RegisterFormModel>) {
-    //     await this.authService.createUserwithEmail(action.payload)
-    //         .then((response) => {
-    //             console.log('User was created successfully! ' + response.email);
-    //         }).catch((error) => {
-    //             console.log(`State CreateUserWithEmail ERROR: ${error}`);
-    //         });
-    // }
-
+    @Receiver()
+    public static async removeCharacters(ctx: StateContext<CharacterStateModel>) {
+        console.log('REMOVE CHARACTERS');
+        ctx.setState({
+            characters: []
+        });
+    }
 }

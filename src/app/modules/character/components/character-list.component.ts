@@ -26,7 +26,11 @@ export class CharacterListComponent implements OnInit {
     public getAllCharacters: Emittable<void>;
 
     ngOnInit() {
-        this.getAllCharacters.emit();
+        this.characters$.subscribe((chars: any) => {
+            if (chars.length === 0) {
+                this.getAllCharacters.emit();
+            }
+        });
     }
 
     onDrawerButtonTap(): void {

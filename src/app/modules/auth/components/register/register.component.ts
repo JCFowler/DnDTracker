@@ -5,6 +5,8 @@ import { Emitter, Emittable } from '@ngxs-labs/emitter';
 
 import { DnDUserState } from '~/app/state/dnduser.state';
 import { RegisterFormModel } from '~/app/shared/models/forms';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 
 @Component({
     moduleId: module.id,
@@ -15,6 +17,8 @@ import { RegisterFormModel } from '~/app/shared/models/forms';
 export class RegisterComponent implements OnInit {
 
     @ViewChild('registerDataForm') registerDataForm: RadDataFormComponent;
+
+    @Select(DnDUserState.registerError) registerError$: Observable<string>;
 
     @Emitter(DnDUserState.createUserwithEmail)
     public createUser: Emittable<RegisterFormModel>;
@@ -34,14 +38,14 @@ export class RegisterComponent implements OnInit {
 
     private onRegisterTap() {
         this.registerDataForm.dataForm.validateAll()
-        .then(ok => {
-            if (ok) {
-                this.registerDataForm.dataForm.commitAll();
-                this.createUser.emit(this.registerForm);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        });
+            .then(ok => {
+                if (ok) {
+                    this.registerDataForm.dataForm.commitAll();
+                    this.createUser.emit(this.registerForm);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 }

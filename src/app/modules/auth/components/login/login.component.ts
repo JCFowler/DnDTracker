@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
 
     @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
     @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
+    @Select(DnDUserState.authError) authError$: Observable<string>;
 
     @Emitter(DnDUserState.signIn)
     public signIn: Emittable<LoginFormModel>;
@@ -45,31 +46,16 @@ export class LoginComponent implements OnInit {
         };
      }
 
-     private onPropertyCommitted() {
-                    //  console.log(this.loginFormData.email);
-                    // console.log(this.loginFormData.password);
-        //  this.loginDataForm.dataForm.validateAll()
-        //     .then(ok => {
-        //         if (ok) {
-        //             console.log('OK!');
-        //             console.log(this.loginFormData.email);
-        //             console.log(this.loginFormData.password);
-        //         }
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
-     }
-
      private onLoginTap() {
         this.loginDataForm.dataForm.validateAll()
             .then(ok => {
                 if (ok) {
+                    this.loginDataForm.dataForm.commitAll();
                     this.signIn.emit(this.loginForm);
                 }
-        })
-        .catch(err => {
-            console.log(err);
-        });
+            })
+            .catch(err => {
+                console.log(err);
+            });
      }
 }
