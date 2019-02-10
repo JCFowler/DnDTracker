@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
     ) { }
 
     public canActivate(): boolean {
+        console.log('AUTH GUARD');
         let email: string = LS.getItem('email');
 
         if (email != null && email !== '') {

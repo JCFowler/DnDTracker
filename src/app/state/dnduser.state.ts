@@ -50,7 +50,21 @@ export class DnDUserState {
     public static async createUserwithEmail(ctx: StateContext<DnDUserStateModel>, action: EmitterAction<RegisterFormModel>) {
         await this.authService.createUserwithEmail(action.payload)
             .then((response) => {
-                console.log('User was created successfully! ' + response.email);
+                this.authService.updateUsername(action.payload)
+                    .then(() => {
+                        const user: DnDUser = {uid: response.uid, name: action.payload.name, email: response.email };
+                        this.authService.addUserToCollection(user)
+                            .then(() => {
+                                console.log('User was added to collection successfully! ' + response.uid);
+                                console.log('User was created successfully! ' + response.email);
+                            })
+                            .catch((error) => {
+                                console.log(`State addUserToCollection ERROR: ${error}`);
+                            });
+                    })
+                    .catch((error) => {
+                        console.log(`State updateUsername ERROR: ${error}`);
+                    });
             }).catch((error) => {
                 console.log(`State CreateUserWithEmail ERROR: ${error}`);
             });
@@ -60,7 +74,7 @@ export class DnDUserState {
     public static async signIn(ctx: StateContext<DnDUserStateModel>, action: EmitterAction<LoginFormModel>) {
         await this.authService.signIn(action.payload)
             .then((response: any) => {
-                let u: DnDUser = {uid: response.user.uid, name: response.user.name, email: response.user.email };
+                const u: DnDUser = {uid: response.user.uid, name: response.user.name, email: response.user.email };
                 LS.setItem('email', u.email);
                 console.log('User signed in successfully! ' + u.email);
                 ctx.patchState({

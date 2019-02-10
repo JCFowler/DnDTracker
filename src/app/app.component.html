@@ -15,12 +15,12 @@ http://docs.telerik.com/devtools/nativescript-ui/Controls/NativeScript/SideDrawe
     
         <ScrollView row="1">
             <StackLayout class="sidedrawer-content">
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" [class.selected]="isComponentSelected('/home')" (tap)="onNavItemTap('/home')">
+                <GridLayout columns="auto, *" class="sidedrawer-list-item" [class.selected]="isComponentSelected('/character')" (tap)="onNavItemTap('/character')">
                     <Label col="0" text="&#xf015;" class="fa"></Label>
                     <Label col="1" text="Characters" class="p-r-10"></Label>
                 </GridLayout>
 
-                <GridLayout columns="auto, *" class="sidedrawer-list-item" [class.selected]="isComponentSelected('/browse')" (tap)="onNavItemTap('/browse')">
+                <GridLayout columns="auto, *" class="sidedrawer-list-item" [class.selected]="isComponentSelected('/adventure')" (tap)="onNavItemTap('/adventure')">
                     <Label col="0" text="&#xf1ea;" class="fa"></Label>
                     <Label col="1" text="Adventures" class="p-r-10"></Label>
                 </GridLayout>
@@ -35,6 +35,11 @@ http://docs.telerik.com/devtools/nativescript-ui/Controls/NativeScript/SideDrawe
                 <GridLayout columns="auto, *" class="sidedrawer-list-item" [class.selected]="isComponentSelected('/settings')" (tap)="onNavItemTap('/settings')">
                     <Label col="0" text="&#xf013;" class="fa"></Label>
                     <Label col="1" text="Settings" class="p-r-10"></Label>
+                </GridLayout>
+
+                <GridLayout columns="auto, *" class="sidedrawer-list-item" (tap)="logoutTap()">
+                    <Label col="0" text="&#xf013;" class="fa"></Label>
+                    <Label col="1" text="Logout" class="p-r-10"></Label>
                 </GridLayout>
             </StackLayout>
         </ScrollView>

@@ -25,6 +25,7 @@ export class RegisterComponent implements OnInit {
 
     ngOnInit() {
         this.registerForm = {
+            name: 'Hello',
             email: 'hi@email.com',
             password: 'pass12',
             verifyPass: 'pass12'

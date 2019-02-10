@@ -16,6 +16,8 @@ const firebase = require('nativescript-plugin-firebase');
 
 
 const testCollection = firebaseWebApi.firestore().collection('test');
+const userCollection = firebaseWebApi.firestore().collection('users');
+
 
 // const unsubscribe = testCollection.onSnapshot((snapshot: firestore.QuerySnapshot) => {
 //     snapshot.forEach(city => console.log(city.data()));
@@ -73,13 +75,22 @@ export class HomeComponent implements OnInit {
         // console.log(user)
           this.myCities$ = Observable.create(subscriber => {
             const colRef: firestore.CollectionReference = firebaseWebApi.firestore().collection('test');
-            colRef.orderBy('name', 'desc').onSnapshot((snapshot: firestore.QuerySnapshot) => {
-              this.zone.run(() => {
+            colRef.get().then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
                 this.cities = [];
-                snapshot.forEach(docSnap => this.cities.push(<City>docSnap.data()));
+                querySnapshot.forEach(docSnap => this.cities.push(<City>docSnap.data()));
                 subscriber.next(this.cities);
               });
             });
+
+            // colRef.orderBy('name', 'desc').onSnapshot((snapshot: firestore.QuerySnapshot) => {
+            //   this.zone.run(() => {
+            //     this.cities = [];
+            //     snapshot.forEach(docSnap => this.cities.push(<City>docSnap.data()));
+            //     subscriber.next(this.cities);
+            //   });
+            // });
           });
     }
 

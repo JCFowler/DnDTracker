@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         this.isAuth$.subscribe((authStatus: boolean) => {
             if (authStatus) {
-                this.routerExtenions.navigate(['/home'], { clearHistory: true });
+                this.routerExtenions.navigate(['/character'], { clearHistory: true });
             }
         });
 

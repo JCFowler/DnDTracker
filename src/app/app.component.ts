@@ -10,6 +10,7 @@ import { Select } from '@ngxs/store';
 import { DnDUserState } from './state/dnduser.state';
 import { Observable } from 'rxjs';
 import { DnDUser } from './shared/models';
+import { Emitter, Emittable } from '@ngxs-labs/emitter';
 
 @Component({
     moduleId: module.id,
@@ -22,6 +23,9 @@ export class AppComponent implements OnInit {
 
     @Select(DnDUserState.isAuth) isAuth$: Observable<boolean>;
     @Select(DnDUserState.getUser) curUser$: Observable<DnDUser>;
+
+    @Emitter(DnDUserState.logout)
+    public logoutEmitter: Emittable<void>;
 
     constructor(private router: Router, private routerExtensions: RouterExtensions) {
         // Use the component constructor to inject services.
@@ -69,11 +73,19 @@ export class AppComponent implements OnInit {
     }
 
     onNavItemTap(navItemRoute: string): void {
+        console.log(navItemRoute);
         this.routerExtensions.navigate([navItemRoute], {
             transition: {
                 name: 'fade'
             }
         });
+
+        const sideDrawer = <RadSideDrawer>app.getRootView();
+        sideDrawer.closeDrawer();
+    }
+
+    logoutTap() {
+        this.logoutEmitter.emit();
 
         const sideDrawer = <RadSideDrawer>app.getRootView();
         sideDrawer.closeDrawer();
