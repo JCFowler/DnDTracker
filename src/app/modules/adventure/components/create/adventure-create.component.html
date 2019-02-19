@@ -1,0 +1,83 @@
+<ActionBar class="action-bar">
+    <Label class="action-bar-title" text="Adventure Create"></Label>
+</ActionBar>
+
+<!-- 
+name: 'string',
+session: 1,
+code: 1,
+gold: 1,
+downtime: 1,
+acp: 1,
+renown: 1,
+dmName: 'string',
+dmdciNumber: 'string'
+ -->
+
+<StackLayout>
+    <RadDataForm #createDataForm [source]="createForm" validationMode="Manual" commitMode="Manual">
+        <TKEntityProperty tkDataFormProperty name="name" displayName="Adventure name" index="1" hintText="Name">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Email can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="session" displayName="Session" index="2" hintText="Session">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="code" displayName="Code" index="3" hintText="Code">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="gold" displayName="Gold" index="4" hintText="Gold">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="downtime" displayName="Downtime" index="5" hintText="Downtime">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="acp" displayName="ACP" index="6" hintText="ACP">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="renown" displayName="Renown" index="6" hintText="Renown">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="dmName" displayName="Dungeon Master's Name" index="7" hintText="Dungeon Master's Name">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Email can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="dmdciNumber" displayName="dmdciNumber" index="8" hintText="dmdciNumber">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Email can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+    </RadDataForm>
+    <Button text="Create Adventure!" (tap)="onCreateAdventure()"></Button>
+</StackLayout>

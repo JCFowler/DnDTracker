@@ -12,7 +12,8 @@ const routes: Routes = [
     { path: 'featured', loadChildren: '~/app/modules/start/featured/featured.module#FeaturedModule' },
     { path: 'settings', loadChildren: '~/app/modules/start/settings/settings.module#SettingsModule' },
     { path: 'auth', loadChildren: '~/app/modules/auth/auth.module#AuthModule' },
-    { path: 'character', loadChildren: '~/app/modules/character/character.module#CharacterModule' }
+    { path: 'character', loadChildren: '~/app/modules/character/character.module#CharacterModule' },
+    { path: 'adventure', loadChildren: '~/app/modules/adventure/adventure.module#AdventureModule' }
 ];
 
 @NgModule({

@@ -4,13 +4,17 @@ import { NativeScriptUIListViewModule } from 'nativescript-ui-listview/angular';
 
 import { COMPONENTS } from './components';
 import { CharacterRoutingModule } from './character.routing';
+import { NativeScriptRouterModule } from 'nativescript-angular/router';
+import { SharedModule } from '~/app/shared/shared.module';
 
 
 @NgModule({
     imports: [
+        SharedModule,
         NativeScriptCommonModule,
         NativeScriptUIListViewModule,
-        CharacterRoutingModule
+        NativeScriptRouterModule,
+        CharacterRoutingModule,
     ],
     exports: [],
     declarations: [...COMPONENTS],

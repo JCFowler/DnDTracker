@@ -4,15 +4,20 @@ import { CharacterService } from '../core/firebase/character.service';
 import { Injector } from '@angular/core';
 import { Receiver, EmitterAction } from '@ngxs-labs/emitter';
 import { DnDUserState } from './dnduser.state';
+import { CharacterCreateForm, charFormToCharacter } from '../shared/models/forms/character-form.model';
 
 export interface CharacterStateModel {
     characters: Character[];
+    isRefreshing?: Boolean;
+    selectedCharacter?: Character;
 }
 
 @State<CharacterStateModel>({
     name: 'characters',
     defaults: {
-        characters: []
+        characters: [],
+        isRefreshing: false,
+        selectedCharacter: undefined
     },
 })
 
@@ -30,12 +35,29 @@ export class CharacterState {
         return state.characters;
     }
 
+    @Selector()
+    public static isRefreshing(state: CharacterStateModel) {
+        return state.isRefreshing;
+    }
+
+    @Selector()
+    public static selectedCharacter(state: CharacterStateModel) {
+        return state.selectedCharacter;
+    }
+
     @Receiver()
-    public static async addCharacter(ctx: StateContext<CharacterStateModel>, action: EmitterAction<Character>) {
+    public static async createCharacter(ctx: StateContext<CharacterStateModel>, action: EmitterAction<CharacterCreateForm>) {
         const user = this.store.selectSnapshot(DnDUserState.getUser);
 
-        this.charService.addNewCharacter(action.payload, user.uid)
+        this.charService.createNewCharacter(action.payload, user.uid)
             .then(() => {
+                let charModel = ctx.getState();
+                charModel.characters.push(charFormToCharacter(action.payload));
+                console.log('Hete');
+                console.dir(charModel);
+                ctx.patchState({
+                    characters: charModel.characters
+                });
                 console.log(`Character was created successfully! Name: ${action.payload.name}`);
             })
             .catch((error) => {
@@ -45,6 +67,8 @@ export class CharacterState {
 
     @Receiver()
     public static async getAllCharacters(ctx: StateContext<CharacterStateModel>) {
+        ctx.patchState({ isRefreshing: true });
+
         const user = this.store.selectSnapshot(DnDUserState.getUser);
 
         this.charService.getAllCharacters(user.uid)
@@ -56,13 +80,22 @@ export class CharacterState {
                 });
 
                 ctx.patchState({
-                    characters: chars
+                    characters: chars,
+                    isRefreshing: false
                 });
                 console.log(`Get All Characters was successful!`);
             })
             .catch((error) => {
+                ctx.patchState({ isRefreshing: false });
                 console.log(`State addCharacter ERROR: ${error}`);
             });
+    }
+
+    @Receiver()
+    public static async chooseCharacter(ctx: StateContext<CharacterStateModel>, action: EmitterAction<Character>) {
+        ctx.patchState({
+            selectedCharacter: action.payload
+        });
     }
 
     @Receiver()

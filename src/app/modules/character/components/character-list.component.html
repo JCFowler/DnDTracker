@@ -15,19 +15,15 @@
     <Label class="action-bar-title" text="Character List"></Label>
 </ActionBar>
 <StackLayout>
-    <Button text="Add Test Character" (tap)="addChar()" ></Button>
-    <GridLayout tkExampleTitle tkToggleNavButton>        
-            <!-- <StackLayout row="0" *ngIf="curUser$ | async; let user">
-                    <Label class="sidedrawer-header-brand" [text]="user.name"></Label>
-                    <Label class="footnote" [text]="user.email"></Label>
-                </StackLayout> -->
-        <RadListView [items]="characters$ | async">
+    <Button [nsRouterLink]="['/character/create']" text="Create new character"></Button>
+    <GridLayout tkExampleTitle tkToggleNavButton>
+        <RadListView selectionBehavior="Press" (itemSelected)="onItemSelected($event)" [items]="characters$ | async" pullToRefresh="true" (pullToRefreshInitiated)="onPullToRefreshInitiated($event)">
             <ng-template tkListItemTemplate let-item="item">
                 <StackLayout orientation="vertical">
-                    <Label [text]="item.name" class="nameLabel"></Label>
-                    <Label [text]="item.uid" class="typeLabel middleLabel"></Label>
+                    <ns-character-item [character]="item"></ns-character-item>
                 </StackLayout>
             </ng-template>
         </RadListView>
     </GridLayout>
 </StackLayout>
+

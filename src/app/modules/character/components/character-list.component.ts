@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RadSideDrawer } from 'nativescript-ui-sidedrawer';
 import * as app from 'tns-core-modules/application';
 import { Character } from '~/app/shared/models/character';
-import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
-import { CharacterService } from '~/app/core/firebase/character.service';
-import { City } from '~/app/shared/models';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { Emitter, Emittable } from '@ngxs-labs/emitter';
 import { CharacterState } from '~/app/state/character.state';
+import { ListViewEventData, RadListView } from 'nativescript-ui-listview';
+import { Actions } from '@ngxs/store';
+import { RouterExtensions } from 'nativescript-angular/router';
 
 @Component({
     moduleId: module.id,
@@ -18,19 +18,19 @@ import { CharacterState } from '~/app/state/character.state';
 
 export class CharacterListComponent implements OnInit {
 
-    constructor(private charService: CharacterService) { }
+    constructor(private routerExtensions: RouterExtensions) { }
 
     @Select(CharacterState.allCharacters) characters$: Observable<Character>;
+    @Select(CharacterState.isRefreshing) isRefreshing$: Observable<Boolean>;
+
+    @Emitter(CharacterState.chooseCharacter)
+    public chooseCharacter: Emittable<Character>;
 
     @Emitter(CharacterState.getAllCharacters)
     public getAllCharacters: Emittable<void>;
 
     ngOnInit() {
-        this.characters$.subscribe((chars: any) => {
-            if (chars.length === 0) {
-                this.getAllCharacters.emit();
-            }
-        });
+        this.getAllCharacters.emit();
     }
 
     onDrawerButtonTap(): void {
@@ -38,16 +38,26 @@ export class CharacterListComponent implements OnInit {
         sideDrawer.showDrawer();
     }
 
-    addChar() {
-        // for (let i = 0; i < 10; i++) {
-        //     const c: Character = {
-        //         uid: `UID${i}`,
-        //         name: `CHARACTER${i}`,
-        //         level: i,
-        //         acp: i * 2,
-        //         adventures: null
-        //     };
-        //     this.charService.addNewCharacter(c);
-        // }
+    public onPullToRefreshInitiated(args: ListViewEventData) {
+        this.getAllCharacters.emit();
+
+        this.isRefreshing$.subscribe((isRefreshing: boolean) => {
+            if (!isRefreshing) {
+                setTimeout(function () {
+                    const listView = args.object;
+                    listView.notifyPullToRefreshFinished();
+                }, 500);
+            }
+        });
+    }
+
+    public onItemSelected(args: ListViewEventData) {
+        const listview = args.object as RadListView;
+        const selectedCharacter = listview.getSelectedItems() as Array<Character>;
+
+        this.chooseCharacter.emit(selectedCharacter[0]);
+
+        this.routerExtensions.navigate(['/adventure'], { clearHistory: true });
+        console.log(selectedCharacter[0].name);
     }
 }

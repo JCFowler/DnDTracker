@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Character } from '~/app/shared/models/character';
+import { CharacterCreateForm } from '~/app/shared/models/forms/character-form.model';
 
 const firebaseWebApi = require('nativescript-plugin-firebase/app');
 const firebase = require('nativescript-plugin-firebase');
@@ -8,8 +9,8 @@ const firebase = require('nativescript-plugin-firebase');
 export class CharacterService {
     constructor() { }
 
-    public async addNewCharacter(character: Character, userUid: string) {
-        return await firebaseWebApi.firestore().collection('users').doc(userUid).collection('characters').add(character);
+    public async createNewCharacter(character: CharacterCreateForm, userUid: string) {
+        return await firebaseWebApi.firestore().collection('users').doc(userUid).collection('characters').doc(character.uid).set(character);
     }
 
     public async getAllCharacters(userUid: string) {

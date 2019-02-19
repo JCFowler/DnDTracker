@@ -3,15 +3,16 @@ import { Routes } from '@angular/router';
 import { NativeScriptRouterModule } from 'nativescript-angular/router';
 
 import { CharacterListComponent } from './components/character-list.component';
+import { CharacterCreateComponent } from './components/create/character-create.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: CharacterListComponent,
-        // children: [
-        //     { path: 'login', component: LoginComponent },
-        //     { path: 'register', component: RegisterComponent }
-        // ]
+        children: [
+            { path: '', component: CharacterListComponent },
+            { path: 'create', component: CharacterCreateComponent },
+            // { path: ':id', component: RegisterComponent }
+        ]
     },
 
 ];

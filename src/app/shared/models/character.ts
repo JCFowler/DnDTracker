@@ -5,5 +5,5 @@ export interface Character {
     name: string;
     level: number;
     acp: number;
-    adventures: [Adventure];
+    adventures: Array<Adventure>;
 }

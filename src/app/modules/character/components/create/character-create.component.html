@@ -1,0 +1,31 @@
+<ActionBar class="action-bar">
+    <Label class="action-bar-title" text="Character Create"></Label>
+</ActionBar>
+
+
+<StackLayout>
+    <RadDataForm #createDataForm row="2" [source]="createForm" validationMode="Manual" commitMode="Manual">
+        <TKEntityProperty tkDataFormProperty name="name" displayName="Character's Name" index="1" hintText="Name">
+            <TKPropertyEditor tkEntityPropertyEditor type="Text">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Email can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="level" displayName="Level" index="2" hintText="Level">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+
+        <TKEntityProperty tkDataFormProperty name="acp" displayName="ACP" index="3" hintText="ACP">
+            <TKPropertyEditor tkEntityPropertyEditor type="Number">
+                <TKPropertyEditorStyle tkPropertyEditorStyle labelTextColor="#4b5833" labelPosition="top"></TKPropertyEditorStyle>
+            </TKPropertyEditor>
+            <TKNonEmptyValidator tkEntityPropertyValidators errorMessage="Password can't be empty."></TKNonEmptyValidator>
+        </TKEntityProperty>
+    </RadDataForm>
+    <Button text="Create Character!" (tap)="onCreateCharacter()"></Button>
+    
+</StackLayout>
