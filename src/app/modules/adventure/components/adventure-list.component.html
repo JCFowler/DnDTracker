@@ -23,7 +23,7 @@
         <RadListView selectionBehavior="Press" (itemSelected)="onItemSelected($event)" [items]="adventures$ | async" pullToRefresh="true" (pullToRefreshInitiated)="onPullToRefreshInitiated($event)">
             <ng-template tkListItemTemplate let-item="item">
                 <StackLayout orientation="vertical">
-                    <ns-character-item [character]="item"></ns-character-item>
+                    <Label [text]="item.name" textWrap="true"></Label>
                 </StackLayout>
             </ng-template>
         </RadListView>

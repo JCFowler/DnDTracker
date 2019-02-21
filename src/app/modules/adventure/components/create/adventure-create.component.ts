@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { RadDataFormComponent } from 'nativescript-ui-dataform/angular/dataform-directives';
 import { AdventureCreateForm } from '~/app/shared/models/forms/adventure-form.model';
 import { Emitter, Emittable } from '@ngxs-labs/emitter';
-import { AdventureState } from '~/app/state/adventure.state';
+import { CharacterState } from '~/app/state/character.state';
 
 @Component({
     moduleId: module.id,
@@ -15,7 +15,7 @@ export class AdventureCreateComponent implements OnInit {
 
     @ViewChild('createDataForm') dataForm: RadDataFormComponent;
 
-    @Emitter(AdventureState.createAdventure)
+    @Emitter(CharacterState.createAdventure)
     public createAdventure: Emittable<AdventureCreateForm>;
 
     public createForm: AdventureCreateForm;

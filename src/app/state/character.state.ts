@@ -5,11 +5,15 @@ import { Injector } from '@angular/core';
 import { Receiver, EmitterAction } from '@ngxs-labs/emitter';
 import { DnDUserState } from './dnduser.state';
 import { CharacterCreateForm, charFormToCharacter } from '../shared/models/forms/character-form.model';
+import { AdventureService } from '../core/firebase/adventure.service';
+import { Adventure } from '../shared/models';
+import { AdventureCreateForm, advFormToAdventure } from '../shared/models/forms/adventure-form.model';
 
 export interface CharacterStateModel {
     characters: Character[];
     isRefreshing?: Boolean;
     selectedCharacter?: Character;
+    selectedAdventure?: Adventure;
 }
 
 @State<CharacterStateModel>({
@@ -17,16 +21,19 @@ export interface CharacterStateModel {
     defaults: {
         characters: [],
         isRefreshing: false,
-        selectedCharacter: undefined
+        selectedCharacter: undefined,
+        selectedAdventure: undefined
     },
 })
 
 export class CharacterState {
     private static charService: CharacterService;
+    private static advService: AdventureService;
     private static store: Store;
 
     constructor(injector: Injector) {
         CharacterState.charService = injector.get<CharacterService>(CharacterService);
+        CharacterState.advService = injector.get<AdventureService>(AdventureService);
         CharacterState.store = injector.get<Store>(Store);
     }
 
@@ -45,6 +52,16 @@ export class CharacterState {
         return state.selectedCharacter;
     }
 
+    @Selector()
+    public static allAdventures(state: CharacterStateModel) {
+        return state.selectedCharacter.adventures;
+    }
+
+    @Selector()
+    public static selectedAdventure(state: CharacterStateModel) {
+        return state.selectedAdventure;
+    }
+
     @Receiver()
     public static async createCharacter(ctx: StateContext<CharacterStateModel>, action: EmitterAction<CharacterCreateForm>) {
         const user = this.store.selectSnapshot(DnDUserState.getUser);
@@ -53,8 +70,6 @@ export class CharacterState {
             .then(() => {
                 let charModel = ctx.getState();
                 charModel.characters.push(charFormToCharacter(action.payload));
-                console.log('Hete');
-                console.dir(charModel);
                 ctx.patchState({
                     characters: charModel.characters
                 });
@@ -104,5 +119,77 @@ export class CharacterState {
         ctx.setState({
             characters: []
         });
+    }
+
+    @Receiver()
+    public static async getAllAdventures(ctx: StateContext<CharacterStateModel>) {
+
+        const user = this.store.selectSnapshot(DnDUserState.getUser);
+
+        this.advService.getAllAdventures(user.uid, ctx.getState().selectedCharacter.uid)
+            .then((response) => {
+                let advs: Adventure[] = [];
+
+                response.forEach(doc => {
+                    advs.push(<Adventure>doc.data());
+                });
+
+                const newCharState = this.updateCharactersAdventures(ctx, advs);
+
+                ctx.patchState({
+                    characters: newCharState.characters,
+                    selectedCharacter: newCharState.selectedCharacter,
+                    isRefreshing: false
+                });
+                console.log(`Get All Adventures was successful!`);
+            })
+            .catch((error) => {
+                ctx.patchState({ isRefreshing: false });
+                console.log(`State getAllAdventures ERROR: ${error}`);
+            });
+    }
+
+    @Receiver()
+    public static async createAdventure(ctx: StateContext<CharacterStateModel>, action: EmitterAction<AdventureCreateForm>) {
+        const user = this.store.selectSnapshot(DnDUserState.getUser);
+        const char = this.store.selectSnapshot(CharacterState.selectedCharacter);
+
+        this.advService.createNewAdventure(action.payload, user.uid, char.uid)
+            .then(() => {
+                let charState = ctx.getState();
+                const advs: Adventure[] = charState.selectedCharacter.adventures;
+                advs.push(advFormToAdventure(action.payload));
+
+                const newCharState = this.updateCharactersAdventures(ctx, advs);
+
+                ctx.patchState({
+                    characters: newCharState.characters,
+                    selectedCharacter: newCharState.selectedCharacter,
+                });
+                console.log(`Adventure was created successfully! Name: ${action.payload.name}`);
+            })
+            .catch((error) => {
+                console.log(`State createAdventure ERROR: ${error}`);
+            });
+    }
+
+    @Receiver()
+    public static async chooseAdventure(ctx: StateContext<CharacterStateModel>, action: EmitterAction<Adventure>) {
+        ctx.patchState({
+            selectedAdventure: action.payload
+        });
+    }
+
+    private static updateCharactersAdventures(ctx: StateContext<CharacterStateModel>, advs: Adventure[]) {
+        let charState = ctx.getState();
+
+        charState.characters.forEach((c) => {
+            if (c.uid === ctx.getState().selectedCharacter.uid) {
+                c.adventures = advs;
+                charState.selectedCharacter.adventures = advs;
+            }
+        });
+
+        return charState;
     }
 }

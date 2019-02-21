@@ -56,8 +56,6 @@ export class CharacterListComponent implements OnInit {
         const selectedCharacter = listview.getSelectedItems() as Array<Character>;
 
         this.chooseCharacter.emit(selectedCharacter[0]);
-
         this.routerExtensions.navigate(['/adventure'], { clearHistory: true });
-        console.log(selectedCharacter[0].name);
     }
 }

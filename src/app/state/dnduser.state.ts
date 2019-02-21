@@ -111,7 +111,6 @@ export class DnDUserState implements NgxsOnInit {
                     authError: undefined
                 });
             }).catch((error) => {
-                console.log('OMG ERROR');
                 console.log(error);
                 ctx.patchState({
                     user: null,

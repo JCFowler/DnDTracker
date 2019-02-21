@@ -16,6 +16,5 @@ export class CharacterItemComponent implements OnInit {
     @Input() character: string;
 
     ngOnInit() {
-        console.log(this.character);
      }
 }
